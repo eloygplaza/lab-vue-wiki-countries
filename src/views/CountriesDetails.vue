@@ -7,7 +7,7 @@
             <figure class="image is-128x128">
                 <img :src="`https://flagpedia.net/data/flags/icon/72x54/${country.alpha2Code.toLowerCase()}.png`">
             </figure>
-            <div class="title">{{}}</div>
+            <div class="title">{{country.name.common}}</div>
             <table class="table is-fullwidth">
                 <tbody>
                     <tr>
@@ -16,19 +16,17 @@
                     </tr>
                     <tr>
                         <td>Area</td>
-                        <td>551695 km <sup>2</sup></td>
+                        <td>{{country.area}} km <sup>2</sup></td>
                     </tr>
                     <tr>
                         <td>Borders</td>
                         <td>
                             <ul>
-                                <li><a href="/AND">Andorra</a></li>
-                                <li><a href="/BEL">Belgium</a></li>
-                                <li><a href="/DEU">Germany</a></li>
-                                <li><a href="/ITA">Italy</a></li>
-                                <li><a href="/MCO">Monaco</a></li>
-                                <li><a href="/ESP">Spain</a></li>
-                                <li><a href="/CHE">Switzerland</a></li>
+                                
+                                <router-link v-for="border in country.borders" :to="{name: 'details', params: {code: border}}">
+                                    <li>{{border}}</li>
+                                </router-link>
+                                
                             </ul>
                         </td>
                     </tr>
@@ -43,22 +41,24 @@
 <!-- START SCRIPT -->
 <script setup>
     import { useRoute } from 'vue-router'
-    import { ref, watch, defineProps } from 'vue'
+    import { ref, watch } from 'vue'
     import countries from '../assets/countries.json';
+    import { countriesApi } from '../helpers';
 
     const route = useRoute();
-    const code = ref();
     const country = ref();
 
-    // fetch the user information when params change
+    // con api, pero no funciona
+    const results = countriesApi();
+    console.log(results);
+
+    // mira si algun reactive data cambia el valor - en este caso route (url navegador)
     watch(() => {
-        code.value = route.params.code
-        
-        // recoger pais
-        country.value = getCountry(code.value);
+        // recoger el objeto del pais introducido
+        country.value = getCountry(route.params.code);
 
         // esto funciona
-        console.log(country.value.alpha2Code.toLowerCase());
+        //console.log(country.value.alpha2Code.toLowerCase());
     });
 
 

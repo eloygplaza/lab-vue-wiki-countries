@@ -38,9 +38,7 @@
 <!-- END TEMPLATE -->
 <!-- START SCRIPT -->
 <script setup>
-    import { defineProps } from 'vue';
     import countries from '../assets/countries.json';
-    import CountriesDetails from '../views/CountriesDetails.vue';
 
 </script>
 <!-- END SCRIPT -->
