@@ -3,7 +3,7 @@ import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
   {
-    path: "/",
+    path: "/lab-vue-wiki-countries/",
     name: "countries",
     component: () => import("../views/CountriesList.vue"),
     children: [
