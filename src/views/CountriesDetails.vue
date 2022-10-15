@@ -12,11 +12,11 @@
                 <tbody>
                     <tr>
                         <td>Capital</td>
-                        <td>{{country.value ? country.value.capital[0] : ''}}</td>
+                        <td>{{country ? country.capital[0] : ''}}</td>
                     </tr>
                     <tr>
                         <td>Area</td>
-                        <td>{{country.value ? country.value.area : ''}} km <sup>2</sup></td>
+                        <td>{{country ? country.area : ''}} km <sup>2</sup></td>
                     </tr>
                     <tr>
                         <td>Borders</td>

@@ -27,7 +27,12 @@
 
                 </div>
 
-                <div v-if="!detailsOn" class="column is-8 is-flex is-justify-content-center is-align-items-center">No seas timid@ elige un pais :)</div>
+                <div v-if="showIntro" class="column is-8 is-flex is-justify-content-center is-align-items-center is-flex-direction-column">
+                    <div class="image is-128x128">
+                        <img src="../assets/earth.png" class="imgEarth"/>
+                    </div>
+                    <div>No seas tímid@ elige un pais :D</div> 
+                </div>
                 <router-view></router-view>
 
             </div>
@@ -38,15 +43,28 @@
 <!-- START SCRIPT -->
 <script setup>
     import { useRoute } from 'vue-router'
-    import { ref, onMounted } from 'vue';
+    import { ref, watch, onMounted } from 'vue';
     import { getCountries } from '../api';
     const isLoaded = ref(false);
     const countries = ref(undefined);
-    const detailsOn = ref();
+    const showIntro = ref();
+    
     // variable donde guardamos nuestra url
     const route = useRoute();
+    // miramos si el apartado details esta imprimido
+    // si no esta imprimido, meteremos nuestro texto
+    if(route.params.code == undefined){
+        showIntro.value = true;
+    } else if(typeof route.params.code !== 'undefined'){
+        showIntro.value = false;
+    }
+    else {
+        showIntro.value = true;
+    }
 
-    detailsOn.value = route.params.code == 'undefined' ? true : false;
+    watch(() => route.params.code, newValue => {
+        showIntro.value = false;
+    });
 
     const loadList = async () => {
         countries.value = await getCountries();
