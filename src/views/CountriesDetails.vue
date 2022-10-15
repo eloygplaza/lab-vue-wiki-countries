@@ -1,22 +1,22 @@
 <!-- START TEMPLATE -->
 <template>
 
-    <div class="column is-8">
+    <div class="column is-8" v-if="isLoaded">
         <section class="section">
 
             <figure class="image is-128x128">
                 <img :src="`https://flagpedia.net/data/flags/icon/72x54/${country.alpha2Code.toLowerCase()}.png`">
             </figure>
-            <div class="title">{{country.name.common}}</div>
+            <div class="title">{{country ? country.name.common : ''}}</div>
             <table class="table is-fullwidth">
                 <tbody>
                     <tr>
                         <td>Capital</td>
-                        <td>{{country.capital[0]}}</td>
+                        <td>{{country.value ? country.value.capital[0] : ''}}</td>
                     </tr>
                     <tr>
                         <td>Area</td>
-                        <td>{{country.area}} km <sup>2</sup></td>
+                        <td>{{country.value ? country.value.area : ''}} km <sup>2</sup></td>
                     </tr>
                     <tr>
                         <td>Borders</td>
@@ -41,31 +41,33 @@
 <!-- START SCRIPT -->
 <script setup>
     import { useRoute } from 'vue-router'
-    import { ref, watch } from 'vue'
-    import countries from '../assets/countries.json';
-    import { countriesApi } from '../helpers';
-
+    import { ref, watch, onMounted } from 'vue';
+    import { getCountry } from '../api';
+    
+    // variable donde guardamos nuestra url
     const route = useRoute();
-    const country = ref();
+    // variable para mostrar el apartado de details
+    const isLoaded = ref(false);
+    // variable donde guardaremos el pais
+    const country = ref('');
 
-    // con api, pero no funciona
-    const results = countriesApi();
-    console.log(results);
-
-    // mira si algun reactive data cambia el valor - en este caso route (url navegador)
-    watch(() => {
-        // recoger el objeto del pais introducido
-        country.value = getCountry(route.params.code);
-
-        // esto funciona
-        //console.log(country.value.alpha2Code.toLowerCase());
-    });
-
-
-    function getCountry(code){
-        return countries.find(element => element.alpha3Code == code);
+    const loadDetails = async () => {
+        country.value = await getCountry(route.params.code);
+        isLoaded.value = true;
     }
 
+    // mira si alguna variable reactive cambia de valor - en este caso route (url navegador)
+    // al entrar escondemos details y esperamos que se ejecute la funcion antes de vovler al mostrarla
+    watch(async () => route.params.code, async newValue => {
+        isLoaded.value = false; 
+        await loadDetails();
+    });
+
+    // al montar el template, carga la funcion para que le devuelva los datos que necesita
+    onMounted(async () => {
+        await loadDetails();
+    });
+    
 </script>
 <!-- END SCRIPT -->
 <!-- START STYLE -->

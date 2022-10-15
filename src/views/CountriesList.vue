@@ -4,9 +4,9 @@
     <!-- container wrapper div -->
     <div class="container" style="height: calc(100vh - 52px);">
             <!-- columns wrapper div -->
-            <div class="columns mt-0 " style="height: 100%;">
+            <div class="columns mt-0 is-centered" style="height: 100%;">
                 <!-- Countries List (column) -->
-                <div class="column is-4" style="overflow: auto">
+                <div v-if="isLoaded" class="column is-4" style="overflow: auto">
 
                     <router-link v-for="country in countries" class="media is-clickable" :to="{name: 'details', params: {code: country.alpha3Code}}">
 
@@ -27,18 +27,34 @@
 
                 </div>
 
+                <div v-if="!detailsOn" class="column is-8 is-flex is-justify-content-center is-align-items-center">No seas timid@ elige un pais :)</div>
                 <router-view></router-view>
 
             </div>
     </div>
 
-    <!-- en el router view se cargara el componente del router -->
-    <!-- <RouterLink></RouterLink> -->
 </template>
 <!-- END TEMPLATE -->
 <!-- START SCRIPT -->
 <script setup>
-    import countries from '../assets/countries.json';
+    import { useRoute } from 'vue-router'
+    import { ref, onMounted } from 'vue';
+    import { getCountries } from '../api';
+    const isLoaded = ref(false);
+    const countries = ref(undefined);
+    const detailsOn = ref();
+    // variable donde guardamos nuestra url
+    const route = useRoute();
+
+    detailsOn.value = route.params.code == 'undefined' ? true : false;
+
+    const loadList = async () => {
+        countries.value = await getCountries();
+        isLoaded.value = true;
+    }
+    onMounted(async () => {
+        loadList();
+    });
 
 </script>
 <!-- END SCRIPT -->
