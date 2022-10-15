@@ -3,8 +3,7 @@
 # LAB | Vue.js WikiCountries
 
 ## Enlace de la solución
-
-https://eloygplaza.github.io/lab-vue-wiki-countries/
+<a href="https://eloygplaza.github.io/lab-vue-wiki-countries/" target="_blank">https://eloygplaza.github.io/lab-vue-wiki-countries/</a>
 
 ## Introducción
 
